@@ -14,13 +14,13 @@
 - list로 생성하기
 ```
 tf.constant([1,2,3])
- > 결과 : <tf.Tensor: id=1, shape=(3,), dtype=int32, numpy=array([1, 2, 3])>
+ >> 결과 : <tf.Tensor: id=1, shape=(3,), dtype=int32, numpy=array([1, 2, 3])>
 
 ```
 - tuple로 생성하기
 ```
 tf.constant(((1,2,3),(1,2,3)))
- > <tf.Tensor: id=3, shape=(2, 3), dtype=int32, numpy=
+ >> <tf.Tensor: id=3, shape=(2, 3), dtype=int32, numpy=
 array([[1, 2, 3],
        [1, 2, 3]])>
 
@@ -30,7 +30,7 @@ array([[1, 2, 3],
 arr=np.array([1,2,3])
 tensor=tf.constant(arr)
 tensor
- ><tf.Tensor: id=4, shape=(3,), dtype=int32, numpy=array([1, 2, 3])>
+ >> <tf.Tensor: id=4, shape=(3,), dtype=int32, numpy=array([1, 2, 3])>
  ```
 
 ### Tensor에 담긴 정보 확인
