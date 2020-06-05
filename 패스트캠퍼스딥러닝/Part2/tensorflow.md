@@ -153,13 +153,143 @@ image.shape
 plt.imshow(image, 'gray') #(28,28,3)처럼 끝에 3이 없는 건 gray계열이라는 뜻. 그래서 이미지 gray로 출력함.
 plt.show()
 ```
-![train_x0]()
+![train_x0](https://github.com/youngDaLee/Deep-learning-Study/blob/master/%ED%8C%A8%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%8D%BC%EC%8A%A4%EB%94%A5%EB%9F%AC%EB%8B%9D/Part2/img/5.png?raw=true)
+이렇게 이미지가 출력 됨.
+- train_x 에는 이미지 데이터가 들어가 있고
+- train_y 에는 이미지의 결과 데이터가 들어가있음
+- test_x와 test_y는 train set(학습데이터)의 평가용
 
 ### Channel 관련
+이미지는 (Batch Size, Height, Width, Channel)의 정보를 담고 있음
+여기에서 GrayScale이면 Channel이 1, RGB면 3
+ 우리가 앞서 했던 train_x의 데이터는(60000,28,28) 이었음. 따라서 BatchSize 60000, Width와 Height는 28인 이미지
 
+- shape로 데이터 확인
+```
+train_x.shape
+ >> (60000,28,28)
+```
+
+- 데이터 차원 수 늘리기(numpy)
+```
+expanded_data=np.expand_dims(train_x,-1)
+expanded_data.shape
+    >> (60000,28,28,1)
+```
+-1은 맨 뒤에 붙는다는 뜻이다.
+
+```
+expanded_data=np.expand_dims(train_x,0)
+expanded_data.shape
+    >> (1,60000,28,28)
+```
+0은 맨 앞에 붙는다는 뜻이다.
+
+```
+expanded_data=np.expand_dims(np.expand_dims(train_x,-1),0)
+expanded_data.shape
+    >> (1,60000,28,28,1)
+```
+이렇게 앞뒤로 붙일 수 도 있다.
+
+- TensorFlow 패키지를 불러와 데이터 차원 수 늘리기(tensorFlow)
+```
+new_train_x=tf.expand_dims(train_x,-1)
+new_train_x.shape
+    >> TensorShape([60000,28,28,1])
+```
+
+- tf.newaxis로 데이터 차원 수 늘리기(주로 사용함)
+```
+train_x[...,tf.newaxis].shape
+    >> (60000,28,28,1)
+```
+이를 활용해
+```
+new_train_x=train_x[...,tf.newaxis]
+```
+로 차원 늘림
+
+- reshape로 차원 늘리기
+```
+reshape=train_x.reshape([60000,28,28,1])
+```
+
++ 주의사항 
+    - matplotlib로 시각화 할 때는 gray scale의 이미지는 3번째 dimension, 즉 channel 부분이 비어있다. 따라서 2 dimension으로 차원을 조절해서 넣어줘야 한다.
+```
+disp=new_train_x[0] #(28,28,1)짜리 이미지
+
+plt.imshow(disp,'gray')
+plt.show()
+    >> error! 시각화 되지 않음
+```
+차원 수 줄이는 방법
+```
+disp=np.squeeze(new_train_x[0]) #(28,28)로 차원 수 줄임
+plt.imshow(disp,'gray')
+plt.show()
+```
+![train_x0](https://github.com/youngDaLee/Deep-learning-Study/blob/master/%ED%8C%A8%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%8D%BC%EC%8A%A4%EB%94%A5%EB%9F%AC%EB%8B%9D/Part2/img/5.png?raw=true)
+이렇게 이미지 출력 됨.
 
 ### Label Dataset
+train_x의 결과 데이터인 train y
+```
+train_y.shape
+    >> (60000,)
+```
+0차원 숫자 데이터
+
+```
+plt.imshow(train_x[0])
+plt.show()
+```
+![train_x0](https://github.com/youngDaLee/Deep-learning-Study/blob/master/%ED%8C%A8%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%8D%BC%EC%8A%A4%EB%94%A5%EB%9F%AC%EB%8B%9D/Part2/img/Notgray5.png?raw=true)
+```
+train_y[0]
+    >> 5
+```
+image dataset(train_x[0])의 정답이 5 라는 뜻이다.
+
+- Label 시각화
+title을 붙여줌.
+```
+plt.title(train_y[0])
+plt.imshow(train_x[0],'gray')
+plt.show()
+```
+![train_x0](https://github.com/youngDaLee/Deep-learning-Study/blob/master/%ED%8C%A8%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%8D%BC%EC%8A%A4%EB%94%A5%EB%9F%AC%EB%8B%9D/Part2/img/label5.png?raw=true)
 
 
 ### OneHot Encoding
+컴퓨터가 이해할 수 있는 형태로 변환해서 Label을 주는 것.
 
+- tesorflow.keras.utils.to_categorical
+```
+from tensorflow. keras.utils import to_categorical
+```
+
+- 6을 예시로 one hot encording
+```
+to_categorical(6,10)
+    >> array([0., 0., 0., 0., 0., 0., 1., 0., 0., 0.], dtype=float32)
+```
+10개 중에 6번째 있는 게 1로 바뀜
+
+- train_y 에 label 확인해서 to_categorical 사용
+```
+label=train_y[0] # label은 5
+
+label_onehot=to_categorical(label,num_classes=10)
+label_onehot
+    >> array([0., 0., 0., 0., 0., 1., 0., 0., 0., 0.], dtype=float32)
+```
+
+- onehot encodiong으로 시각화
+```
+plt.title(label_onehot)
+plt.imshow(train_x[0], 'gray')
+plt.show()
+```
+![train_x0](https://github.com/youngDaLee/Deep-learning-Study/blob/master/%ED%8C%A8%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%8D%BC%EC%8A%A4%EB%94%A5%EB%9F%AC%EB%8B%9D/Part2/img/onehotencoding5.png?raw=true)
