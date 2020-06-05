@@ -293,3 +293,6 @@ plt.imshow(train_x[0], 'gray')
 plt.show()
 ```
 ![train_x0](https://github.com/youngDaLee/Deep-learning-Study/blob/master/%ED%8C%A8%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%8D%BC%EC%8A%A4%EB%94%A5%EB%9F%AC%EB%8B%9D/Part2/img/onehotencoding5.png?raw=true)
+
+
+- mk
