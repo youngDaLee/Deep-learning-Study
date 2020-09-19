@@ -6,3 +6,5 @@ NN을 만들 때 선택해야 하는 것 중 하나는 hidden layer와 output la
 
 ![tanh](./img/tanhReal.gif)
 $$ a=tanh(z)=\frac{e^z-e^{-z}}{e^z+e^{-z}}$$
+
+또한 다른 층에서는 다른 활성화함수가 사용될 수 있다.
